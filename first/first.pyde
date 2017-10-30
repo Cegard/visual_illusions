@@ -12,7 +12,7 @@ def setup():
     smooth()
     size(800, 600, P3D)
     background(0, 0, 0)
-    center = PVector(width/2, height/2, 0)
+    center = PVector(0, 0, 0)
     model = Model(center, 300, 100, 100)
 
 
@@ -21,5 +21,9 @@ def draw():
     
     background(0,0,0)
     lights()
-    model.move(0.6, 0.6, -0.8)
+    translate(width/2, height/2)
+    #model.move(0.6, 0.6, -0.8)
+    model.turn('z', 0.01)
+    model.turn('x', 0.01)
+    model.turn('y', 0.01)
     model.draw()

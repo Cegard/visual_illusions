@@ -1,4 +1,44 @@
+
+
 class Model:
+    
+    
+    def __angle_cos(self, betha):
+        return cos(betha)
+    
+    
+    def __angle_sin(self, betha):
+        return sin(betha)
+    
+    
+    def __x_matrix(self, betha) :
+        matrix = [
+            [1, 0, 0],
+            [0, self.__angle_cos(betha), -self.__angle_sin(betha)],
+            [0, self.__angle_sin(betha), self.__angle_cos(betha)]
+        ]
+        
+        return matrix
+    
+    
+    def __y_matrix(self, betha):
+        matrix = [
+            [self.__angle_cos(betha), 0, self.__angle_sin(betha)],
+            [0, 1, 0],
+            [-self.__angle_sin(betha), 0, self.__angle_cos(betha)]
+        ]
+        
+        return matrix
+    
+    
+    def __z_matrix (self, betha):
+        matrix = [
+            [self.__angle_cos(betha), -self.__angle_sin(betha), 0],
+            [self.__angle_sin(betha), self.__angle_cos(betha), 0],
+            [0, 0, 1]
+        ]
+        
+        return matrix
     
     
     def __make_square(self, height_coef):
@@ -6,10 +46,10 @@ class Model:
         z_coefs = (-1, 1)
         square = []
         get_point = lambda reference, dimension, length : \
-                    reference + dimension*length/2
+            reference + dimension*length/2
         
         for x_coef in x_coefs:
-            
+        
             for z_coef in z_coefs:
                 x = get_point(self.center.x, x_coef, self.width)
                 y = get_point(self.center.y, height_coef, self.height)
@@ -44,11 +84,26 @@ class Model:
         
         for quad in xrange(4):
             face_points = [self.__top_square[index_one], self.__bottom_square[index_one],
-                           self.__bottom_square[index_two], self.__top_square[index_two]]
+                    self.__bottom_square[index_two], self.__top_square[index_two]]
             face = self.__make_face(face_points)
             self.figure.addChild(face)
             index_one += 1
             index_two += 1
+    
+    
+    def __stablish_highest(self):
+        all_points = self.__top_square + self.__bottom_square
+        max_height = -float('inf')
+        
+        for actual_point in all_points:
+            
+            if (actual_point.y > max_height):
+                self.__highest_points = [actual_point]
+                max_height = actual_point.y 
+            
+            elif (actual_point.y == max_height):
+                self.__highest_points.append(actual_point)
+            
     
     
     def __init__(self, center, figure_height, figure_width, figure_depth):
@@ -56,17 +111,39 @@ class Model:
         self.width = figure_width
         self.depth = figure_depth
         self.center = center
+        self.__turning_matrices = {
+            'x' : self.__x_matrix,
+            'y' : self.__y_matrix,
+            'z' : self.__z_matrix,
+        }
         self.__top_square = self.__make_square(1)
         self.__bottom_square = self.__make_square(-1)
+        self.__highest_points = []
         self.__build()
+        self.__stablish_highest()
+        self.stroke_weight = 3
+        self.line_color = color(255, 255, 0)
+        self.face_color = color(0, 255, 255, 100)
+        
+        pushMatrix()
+        strokeWeight(self.stroke_weight)
+        stroke(self.line_color)
+        fill(self.face_color)
+        popMatrix()
+    
+    
+    def __move_vertex(self, old_vertex, movement):
+        old_vertex.x += movement['x']
+        old_vertex.y += movement['y']
+        old_vertex.z += movement['z']
     
     
     def __move_square(self, square, movement):
         
-        for old_point in square:
-            old_point.x += movement['x']
-            old_point.y += movement['y']
-            old_point.z += movement['z']
+        move = lambda old_point : \
+            self.__move_vertex(old_point, movement)
+        
+        square = map(move, square)
     
     
     def move(self, dx, dy, dz):
@@ -84,13 +161,32 @@ class Model:
         self.__build()
     
     
+    def __turn_square(self, square, turning_matrix):
+        
+        turn = lambda old_point, row : \
+            old_point.x*row[0] + \
+            old_point.y*row[1] + \
+            old_point.z*row[2]
+        
+        
+        def turn_point(point_to_turn):
+            point_to_turn.x = turn(point_to_turn, turning_matrix[0])
+            point_to_turn.y = turn(point_to_turn, turning_matrix[1])
+            point_to_turn.z = turn(point_to_turn, turning_matrix[2])
+        
+        
+        square = map(turn_point, square)
+    
+    
+    def turn(self, axis, angle):
+        turning_matrix = self.__turning_matrices[axis](angle)
+        self.__turn_square(self.__top_square, turning_matrix)
+        self.__turn_square(self.__bottom_square, turning_matrix)
+        self.__build()
+        self.__stablish_highest()
+  
+  
     def draw(self):
         pushMatrix()
-        stroke_weight = 3
-        line_color = color(255, 255, 0)
-        face_color = color(0, 255, 255, 100)
-        strokeWeight(stroke_weight)
-        stroke(line_color)
-        fill(face_color)
         shape(self.figure)
         popMatrix()
