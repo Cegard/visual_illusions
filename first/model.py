@@ -96,12 +96,14 @@ class Model:
         max_height = -float('inf')
         
         for actual_point in all_points:
+            point_height = round(actual_point.y, 3)
+            print(point_height)
             
-            if (actual_point.y > max_height):
+            if (point_height > max_height):
                 self.__highest_points = [actual_point]
-                max_height = actual_point.y 
+                max_height = point_height 
             
-            elif (actual_point.y == max_height):
+            elif (point_height == max_height):
                 self.__highest_points.append(actual_point)
             
     
@@ -188,7 +190,6 @@ class Model:
         self.__turn_square(self.__bottom_square, turning_matrix)
         self.__build()
         self.__stablish_highest()
-        if len(self.__highest_points) > 2: print(len(self.__highest_points))
   
   
     def draw(self):
