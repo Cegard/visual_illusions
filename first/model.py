@@ -163,19 +163,23 @@ class Model:
     
     def __turn_square(self, square, turning_matrix):
         
-        turn = lambda old_point, row : \
-            old_point.x*row[0] + \
-            old_point.y*row[1] + \
-            old_point.z*row[2]
-        
-        
-        def turn_point(point_to_turn):
-            point_to_turn.x = turn(point_to_turn, turning_matrix[0])
-            point_to_turn.y = turn(point_to_turn, turning_matrix[1])
-            point_to_turn.z = turn(point_to_turn, turning_matrix[2])
-        
-        
-        square = map(turn_point, square)
+        for old_point in square:
+            x = old_point.x*turning_matrix[0][0] + \
+                old_point.y*turning_matrix[0][1] + \
+                old_point.z*turning_matrix[0][2]
+            
+            y = old_point.x*turning_matrix[1][0] + \
+                old_point.y*turning_matrix[1][1] + \
+                old_point.z*turning_matrix[1][2]
+            
+            z = old_point.x*turning_matrix[2][0] + \
+                old_point.y*turning_matrix[2][1] + \
+                old_point.z*turning_matrix[2][2]
+            
+            old_point.x = x
+            old_point.y = y
+            old_point.z = z
+            
     
     
     def turn(self, axis, angle):
@@ -184,6 +188,7 @@ class Model:
         self.__turn_square(self.__bottom_square, turning_matrix)
         self.__build()
         self.__stablish_highest()
+        if len(self.__highest_points) > 2: print(len(self.__highest_points))
   
   
     def draw(self):
