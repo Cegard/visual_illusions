@@ -183,10 +183,16 @@ class Model:
             
     
     
-    def turn(self, axis, angle):
-        angle = radians(angle)
-        turning_matrix = self.__turning_matrices[axis](angle)
-        self.__turn(self.__all_points, turning_matrix)
+    def turn(self, x_angle, y_angle, z_angle):
+        x_angle = radians(x_angle)
+        y_angle = radians(y_angle)
+        z_angle = radians(z_angle)
+        x_turning_matrix = self.__turning_matrices['x'](x_angle)
+        y_turning_matrix = self.__turning_matrices['y'](y_angle)
+        z_turning_matrix = self.__turning_matrices['z'](z_angle)
+        self.__turn(self.__all_points, x_turning_matrix)
+        self.__turn(self.__all_points, y_turning_matrix)
+        self.__turn(self.__all_points, z_turning_matrix)
         self.__build()
     
     

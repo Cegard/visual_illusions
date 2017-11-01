@@ -16,7 +16,7 @@ def setup():
     center = PVector(0, 0, 0)
     angle = 0.5
     model = Model(center, 300, 100, 100)
-    model.turn('x', 90)
+    model.turn(90, 45, 0)
     model.shear(0, -100)
     model.scalate(2, 0.5, 1)
     #model.turn('x', -angle)
