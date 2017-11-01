@@ -97,7 +97,6 @@ class Model:
         
         for actual_point in all_points:
             point_height = round(actual_point.y, 3)
-            print(point_height)
             
             if (point_height > max_height):
                 self.__highest_points = [actual_point]
@@ -165,22 +164,23 @@ class Model:
     
     def __turn_square(self, square, turning_matrix):
         
-        for old_point in square:
-            x = old_point.x*turning_matrix[0][0] + \
-                old_point.y*turning_matrix[0][1] + \
-                old_point.z*turning_matrix[0][2]
+        turn = lambda old_point, row : \
+            old_point.x*row[0] + \
+            old_point.y*row[1] + \
+            old_point.z*row[2]
+        
+        
+        def turn_point(point_to_turn):
+            x = turn(point_to_turn, turning_matrix[0])
+            y = turn(point_to_turn, turning_matrix[1])
+            z = turn(point_to_turn, turning_matrix[2])
             
-            y = old_point.x*turning_matrix[1][0] + \
-                old_point.y*turning_matrix[1][1] + \
-                old_point.z*turning_matrix[1][2]
-            
-            z = old_point.x*turning_matrix[2][0] + \
-                old_point.y*turning_matrix[2][1] + \
-                old_point.z*turning_matrix[2][2]
-            
-            old_point.x = x
-            old_point.y = y
-            old_point.z = z
+            point_to_turn.x = x
+            point_to_turn.y = y
+            point_to_turn.z = z
+        
+        
+        square = map(turn_point, square)
             
     
     
