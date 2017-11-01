@@ -82,7 +82,7 @@ class Model:
         self.figure.addChild(top_face)
         self.figure.addChild(bottom_face)
         
-        for quad in xrange(4):
+        for square in xrange(4):
             face_points = [self.__top_square[index_one], self.__bottom_square[index_one],
                     self.__bottom_square[index_two], self.__top_square[index_two]]
             face = self.__make_face(face_points)
@@ -91,19 +91,18 @@ class Model:
             index_two += 1
     
     
-    def __stablish_highest(self):
-        all_points = self.__top_square + self.__bottom_square
-        max_height = -float('inf')
+    def __stablish_highests(self):
+        max_height = float('inf')
         
-        for actual_point in all_points:
+        for actual_point in self.__all_points:
             point_height = round(actual_point.y, 3)
             
-            if (point_height > max_height):
-                self.__highest_points = [actual_point]
+            if (point_height < max_height):
+                self.__highests_points = [actual_point]
                 max_height = point_height 
             
             elif (point_height == max_height):
-                self.__highest_points.append(actual_point)
+                self.__highests_points.append(actual_point)
             
     
     
@@ -119,9 +118,10 @@ class Model:
         }
         self.__top_square = self.__make_square(1)
         self.__bottom_square = self.__make_square(-1)
-        self.__highest_points = []
+        self.__all_points = self.__top_square + self.__bottom_square
+        self.__highests_points = []
         self.__build()
-        self.__stablish_highest()
+        self.__stablish_highests()
         self.stroke_weight = 3
         self.line_color = color(255, 255, 0)
         self.face_color = color(0, 255, 255, 100)
@@ -139,12 +139,12 @@ class Model:
         old_vertex.z += movement['z']
     
     
-    def __move_square(self, square, movement):
+    def __move(self, figure, movement):
         
         move = lambda old_point : \
             self.__move_vertex(old_point, movement)
         
-        square = map(move, square)
+        map(move, self.__all_points)
     
     
     def move(self, dx, dy, dz):
@@ -157,12 +157,11 @@ class Model:
             'y' : dy,
             'z' : dz
         }
-        self.__move_square(self.__top_square, movement)
-        self.__move_square(self.__bottom_square, movement)
+        self.__move(self.__all_points, movement)
         self.__build()
     
     
-    def __turn_square(self, square, turning_matrix):
+    def __turn(self, points, turning_matrix):
         
         turn = lambda old_point, row : \
             old_point.x*row[0] + \
@@ -180,16 +179,57 @@ class Model:
             point_to_turn.z = z
         
         
-        square = map(turn_point, square)
+        map(turn_point, points)
             
     
     
     def turn(self, axis, angle):
+        angle = radians(angle)
         turning_matrix = self.__turning_matrices[axis](angle)
-        self.__turn_square(self.__top_square, turning_matrix)
-        self.__turn_square(self.__bottom_square, turning_matrix)
+        self.__turn(self.__all_points, turning_matrix)
         self.__build()
-        self.__stablish_highest()
+    
+    
+    def __shear(self, points, movement):
+        
+        move_point = lambda old_point : self.__move_vertex(old_point, movement)
+        
+        map(move_point, points)
+    
+    
+    def shear(self, dx, dz):
+        self.__stablish_highests()
+        print(self.__highests_points[0].y)
+        movement = {
+            'x' : dx, 
+            'y' : 0, 
+            'z' : dz
+        }
+        self.__shear(self.__highests_points, movement)
+        self.__build()
+        
+        
+    def __scale_vertex(self, old_point, factors):
+        old_point.x *= factors['x']
+        old_point.y *= factors['y']
+        old_point.z *= factors['z']
+    
+    
+    def __scalate(self, points, factors):
+        
+        scalate = lambda old_point : self.__scale_vertex(old_point, factors)
+        
+        map(scalate, points)
+    
+    
+    def scalate(self, sx, sy, sz):
+        scale_factors = {
+            'x' : sx,
+            'y' : sy,
+            'z' : sz
+        }
+        self.__scalate(self.__all_points, scale_factors)
+        self.__build() 
   
   
     def draw(self):
