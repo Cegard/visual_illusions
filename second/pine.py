@@ -98,7 +98,7 @@ class Pine:
     
     def __init__(self, sides, center, figure_height, base_radius):
         self.__base = self.__polygon(sides, center.x, center.z, base_radius)
-        top_y = center.y - figure_height
+        top_y = -(center.y + figure_height)
         self.__top = PVector(center.x, top_y, center.z)
         
         self.__turning_matrices = {
@@ -193,7 +193,6 @@ class Pine:
     
     def shear(self, dx, dz):
         self.__stablish_highests()
-        print(self.__highests_points[0].y)
         movement = {
             'x' : dx, 
             'y' : 0, 
@@ -223,7 +222,7 @@ class Pine:
             'z' : sz
         }
         self.__scalate(self.__all_points, scale_factors)
-        self.__build() 
+        self.__build()
   
   
     def draw(self):

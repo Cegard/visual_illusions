@@ -205,7 +205,6 @@ class Model:
     
     def shear(self, dx, dz):
         self.__stablish_highests()
-        print(self.__highests_points[0].y)
         movement = {
             'x' : dx, 
             'y' : 0, 

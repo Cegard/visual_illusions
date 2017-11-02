@@ -1,5 +1,4 @@
 from model import Model
-import math
 
 model = None
 angle = 0
