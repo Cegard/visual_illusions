@@ -34,6 +34,18 @@ def __move_vertex(old_vertex, movement):
     old_vertex.z += movement['z']
 
 
+def send_to_origin(core, points):
+    
+    
+    def move_to_origin(figure_point):
+        figure_point.x -= core.x
+        figure_point.y -= core.y
+        figure_point.z -= core.z
+    
+    
+    map(move_to_origin, points)
+
+
 def move_points(points, movement):
     
     move = lambda old_point : \
@@ -98,6 +110,36 @@ def make_face(points):
     face.endShape(CLOSE)
     
     return face
+
+
+def find_core(points):
+    x_min, x_max = float('inf'), -float('inf')
+    y_min, y_max = float('inf'), -float('inf')
+    z_min, z_max = float('inf'), -float('inf')
+    
+    is_higher = lambda variable, xtreme: \
+        variable > xtreme
+    
+    is_lower = lambda variable, xtreme: \
+        variable < xtreme
+    
+    say_is_xtreme = lambda component, actual, comparator: \
+        component if comparator(component, actual) else actual
+    
+    for figure_point in points:
+        x_min = say_is_xtreme(figure_point.x, x_min, is_lower)
+        x_max = say_is_xtreme(figure_point.x, x_max, is_higher)
+        y_min = say_is_xtreme(figure_point.y, y_min, is_lower)
+        y_max = say_is_xtreme(figure_point.y, y_max, is_higher)
+        z_min = say_is_xtreme(figure_point.z, z_min, is_lower)
+        z_max = say_is_xtreme(figure_point.z, z_max, is_higher)
+    
+    x_diff = x_min + (x_max - x_min)/2
+    y_diff = y_min + (y_max - y_min)/2
+    z_diff = z_min + (z_max - z_min)/2
+    core = PVector(x_diff, y_diff, z_diff)
+    
+    return core
 
 
 #######################

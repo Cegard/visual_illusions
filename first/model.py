@@ -8,15 +8,15 @@ class Model:
         x_coefs = (-1, 1)
         z_coefs = (-1, 1)
         square = []
-        get_point = lambda reference, dimension, length : \
-            reference + dimension*length/2
+        calc_component = lambda reference, dimension, distance : \
+            reference + dimension*distance/2
         
         for x_coef in x_coefs:
         
             for z_coef in z_coefs:
-                x = get_point(self.center.x, x_coef, self.width)
-                y = get_point(self.center.y, height_coef, self.height)
-                z = get_point(self.center.z, z_coef, self.depth)
+                x = calc_component(self.center.x, x_coef, self.width)
+                y = calc_component(self.center.y, height_coef, self.height)
+                z = calc_component(self.center.z, z_coef, self.depth)
                 square.append(PVector(x, y, z))
             
             z_coefs = (1, -1)
@@ -57,6 +57,7 @@ class Model:
         self.stroke_weight = 3
         self.line_color = color(255, 255, 0)
         self.face_color = color(0, 255, 255, 100)
+        find_core(self.__all_points)
         
         pushMatrix()
         strokeWeight(self.stroke_weight)
@@ -87,7 +88,6 @@ class Model:
             'z' : dz
         }
         shear_points(self.__highests_points, movement)
-        
         self.__build()
     
     
@@ -98,9 +98,15 @@ class Model:
             'z' : sz
         }
         scale_points(self.__all_points, scale_factors)
-        self.__build() 
-  
-  
+        self.__build()
+    
+    
+    def move_to_origin(self):
+        self.center = find_core(self.__all_points)
+        send_to_origin(self.center, self.__all_points)
+        self.__build()
+    
+    
     def draw(self):
         pushMatrix()
         shape(self.figure)

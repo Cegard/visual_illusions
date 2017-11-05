@@ -12,11 +12,11 @@ def setup():
     smooth()
     size(800, 600, P3D)
     background(0, 0, 0)
-    center = PVector(0, 0, 0)
+    center = PVector(100, 100, 100)
     angle = 0.5
     model = Model(center, 300, 100, 100)
     #model.turn(90, 45, 0)
-    model.shear(200, -100)
+    #model.shear(200, -100)
     #model.scalate(2, 0.5, 1)
     #model.turn('x', -angle)
 
@@ -26,7 +26,8 @@ def draw():
     
     background(0,0,0)
     lights()
-    translate(width/2, height/2)
+    model.move(100, 100, 100)
+    model.move_to_origin()
     rotateY(radians(frameCount))
     #angle = -angle
     #model.turn('y', angle)
