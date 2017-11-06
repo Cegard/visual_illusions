@@ -15,10 +15,6 @@ def setup():
     center = PVector(100, 100, 100)
     angle = 0.5
     model = Model(center, 300, 100, 100)
-    #model.turn(90, 45, 0)
-    #model.shear(200, -100)
-    #model.scalate(2, 0.5, 1)
-    #model.turn('x', -angle)
 
 
 def draw():
@@ -26,10 +22,8 @@ def draw():
     
     background(0,0,0)
     lights()
-    model.move(100, 100, 100)
-    model.move_to_origin()
-    rotateY(radians(frameCount))
-    #angle = -angle
-    #model.turn('y', angle)
-    #model.move(1, 1, 0)
+    a = PVector(0,0,0)
+    b = PVector(0,0,1)
+    model.move(0.4, 0, 0)
+    model.turn(a, b, 0.5)
     model.draw()

@@ -101,9 +101,9 @@ class Model:
         self.__build()
     
     
-    def move_to_origin(self):
-        self.center = find_core(self.__all_points)
-        send_to_origin(self.center, self.__all_points)
+    def turn(self, point_1, point_2, angle):
+        angle = radians(angle)
+        turn_points(point_1, point_2, angle, self.__all_points)
         self.__build()
     
     
