@@ -2,34 +2,41 @@ from pine import Pine
 from forest import Forest
 
 model = None
+central_angle = 1
+orbital_angle = -2
+y_angle = 1
+central_center = PVector(150, 0, 0)
+orbital_center = PVector(-150, 0, 0)
+central = None
+orbital = None
 
 
 def setup():
-    global model
+    global model, central_center, orbital_center, central, orbital
     
     size(800, 600, P3D)
-    center_1 = PVector(0, 0, 100)
-    center_2 = PVector(-150, 0, 0)
-    center_3 = PVector(300, 0, -200)
-    pine_1 = Pine(8, center_1, 100, 60)
-    pine_2 = Pine(8, center_2, 100, 60)
-    pine_3 = Pine(8, center_3, 100, 60)
-    pines = [pine_1, pine_2, pine_3]
+    #rotateX(radians(15))
+    central = Pine(8, central_center, 100, 60)
+    orbital = Pine(8, orbital_center, 100, 60)
+    pines = [central, orbital]
     model = Forest(pines)
 
 
 def draw():
-    global model
+    global model, central, orbital, central_angle, \
+           orbital_angle, y_angle
     
     background(0,0,0)
     lights()
     translate(width/2, height/2)
-    y_angle = 1
-    x_shear = cos(radians(y_angle))
-    z_shear = sin(radians(y_angle))
-    model.shear(x_shear, z_shear)
-    model.turn(0, y_angle, 0)
+    # x_shear = cos(radians(y_angle))
+    # z_shear = sin(radians(y_angle))
+    # model.shear(x_shear, z_shear)
+    #model.turn(PVector(0, 1, 0), PVector(0, 2, 0), -y_angle)
+    central.move(1, 0, -1)
+    central.turn(PVector(0, 1, 0), PVector(0, 2, 0), central_angle,
+                 PVector(0,0,0))
+    orbital.turn(PVector(0, 1, 0), PVector(0, 2, 0), orbital_angle,
+                 central.core)
     model.draw()
     #model.turn(1, 0, 0)
-    
-    

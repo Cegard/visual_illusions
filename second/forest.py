@@ -11,10 +11,10 @@ class Forest:
             pine.shear(dx, dz)
     
     
-    def turn(self, angle_x, angle_y, angle_z):
+    def turn(self, point_1, point_2, angle):
         
         for pine in self.__pines:
-            pine.turn(angle_x, angle_y, angle_z)
+            pine.turn(point_1, point_2, angle)
   
   
     def draw(self):

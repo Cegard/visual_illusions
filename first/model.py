@@ -53,11 +53,9 @@ class Model:
         self.__all_points = self.__top_square + self.__bottom_square
         self.__highests_points = []
         self.__build()
-        #self.__stablish_highests()
         self.stroke_weight = 3
         self.line_color = color(255, 255, 0)
         self.face_color = color(0, 255, 255, 100)
-        find_core(self.__all_points)
         
         pushMatrix()
         strokeWeight(self.stroke_weight)
@@ -67,10 +65,6 @@ class Model:
     
     
     def move(self, dx, dy, dz):
-        x = self.center.x + dx
-        y = self.center.y + dy
-        z = self.center.z + dz
-        self.center = PVector(x, y, z)
         movement = {
             'x' : dx,
             'y' : dy,

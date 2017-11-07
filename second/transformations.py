@@ -224,6 +224,3 @@ def turn_points(point_1, point_2, betha, points,
     send_to_origin(initial_point, points)
     __turn_points(points, betha_matrix)
     send_to_origin(last_point, points)
-    
-    
-    
