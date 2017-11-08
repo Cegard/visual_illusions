@@ -73,13 +73,13 @@ class Pine:
         self.__build()
     
     
-    def scalate(self, sx, sy, sz):
+    def scalate(self, sx, sy, sz, reference_point = None):
         scale_factors = {
             'x' : sx,
             'y' : sy,
             'z' : sz
         }
-        scale_points(self.__all_points, scale_factors)
+        scale_points(self.__all_points, scale_factors, reference_point)
         self.__build()
     
     
@@ -88,6 +88,18 @@ class Pine:
         turn_points(point_1, point_2, angle, self.__all_points,
                     reference_point)
         self.__build()
+  
+  
+    def turn_on_x(self, angle, reference_point = None):
+        angle = radians(angle)
+        initial_point = reference_point if reference_point else \
+                        find_core(self.__all_points)
+        last_point = PVector(-initial_point.x, -initial_point.y,
+                            -initial_point.z)
+        
+        send_to_origin(initial_point, self.__all_points)
+        rotateX(angle)
+        send_to_origin(last_point, self.__all_points)
   
   
     def draw(self):
