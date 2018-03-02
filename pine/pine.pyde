@@ -40,9 +40,9 @@ def draw():
            orbital_angle, y_angle, origin
     
     background(0,0,0)
-    #lights()
+    lights()
     translate(width/2, height/2)
-    rotateX( frameCount*0.05)
+    rotateX(-frameCount*0.04)
     model.draw()
 
 
