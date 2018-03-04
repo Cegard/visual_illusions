@@ -42,7 +42,7 @@ def draw():
     background(0,0,0)
     lights()
     translate(width/2, height/2)
-    rotateX(-frameCount*0.04)
+    rotateX(-frameCount*0.01)
     model.draw()
 
 
